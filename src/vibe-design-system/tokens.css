@@ -1,0 +1,33 @@
+:root {
+  /* Color */
+  --vds-color-bg-primary: var(--bg-primary);
+  --vds-color-bg-secondary: var(--bg-secondary);
+  --vds-color-accent: var(--accent);
+  --vds-color-accent-hover: var(--accent-hover);
+  --vds-color-text-primary: var(--text-primary);
+  --vds-color-text-secondary: var(--text-secondary);
+  --vds-color-text-muted: var(--text-muted);
+  --vds-color-border: var(--border-color);
+  --vds-color-gray-light: var(--gray-light);
+  --vds-color-gray-medium: var(--gray-medium);
+  --vds-color-danger: var(--danger);
+  --vds-color-ok: var(--ok);
+
+  /* Layout */
+  --vds-border-width: var(--border-width);
+  --vds-shadow-offset: var(--shadow-offset);
+
+  /* Spacing */
+  --vds-space-8: 8px;
+  --vds-space-12: 12px;
+  --vds-space-16: 16px;
+  --vds-space-20: 20px;
+  --vds-space-24: 24px;
+
+  /* Typography */
+  --vds-font-size-12: 12px;
+  --vds-font-size-14: 14px;
+  --vds-font-size-16: 16px;
+  --vds-font-size-24: 24px;
+}
+

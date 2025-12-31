@@ -47,7 +47,7 @@ export function Dropzone({ accept, multiple, disabled, onFiles }: DropzoneProps)
     >
       <div className="vds-dropzone__row">
         <div>
-          <div className="vds-dropzone__title">{dragging ? '松手即可导入' : '导入 PNG 文件'}</div>
+          <div className="vds-dropzone__title">{dragging ? '松手即可导入' : '导入图片文件'}</div>
           <div className="vds-dropzone__hint">拖拽到这里，或点击按钮选择文件（不会上传）</div>
         </div>
         <Button variant="accent" disabled={disabled} type="button" onClick={openPicker}>

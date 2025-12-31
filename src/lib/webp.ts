@@ -30,7 +30,7 @@ type DecodedSource = {
   cleanup: () => void
 }
 
-async function decodePng(file: File): Promise<DecodedSource> {
+async function decodeImage(file: File): Promise<DecodedSource> {
   if (typeof createImageBitmap === 'function') {
     const bitmap = await createImageBitmap(file)
     return {
@@ -64,12 +64,12 @@ async function decodePng(file: File): Promise<DecodedSource> {
     }
   } catch {
     URL.revokeObjectURL(url)
-    throw new Error('Failed to decode PNG')
+    throw new Error('Failed to decode image')
   }
 }
 
-export async function convertPngFileToWebp(file: File, quality: number): Promise<Blob> {
-  const decoded = await decodePng(file)
+export async function convertImageFileToWebp(file: File, quality: number): Promise<Blob> {
+  const decoded = await decodeImage(file)
   try {
     const canvas = document.createElement('canvas')
     canvas.width = decoded.width

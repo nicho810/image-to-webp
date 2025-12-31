@@ -2,13 +2,29 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ResultsTable, type ResultItem } from './components/ResultsTable'
 import { ProfileSelector } from './components/ProfileSelector'
 import { WEBP_PROFILES, type ProfileId } from './lib/profiles'
-import { convertPngFileToWebp, isWebpEncodeSupported } from './lib/webp'
+import { convertImageFileToWebp, isWebpEncodeSupported } from './lib/webp'
 import { ActionsRow, Alert, AppShell, Button, Dropzone, GithubLinkBanner } from './vibe-design-system/components'
 
 type ItemState = ResultItem & { file: File }
 
 function nextId() {
   return `${Date.now().toString(36)}-${Math.random().toString(16).slice(2)}`
+}
+
+function isLikelyImageFile(file: File) {
+  if (file.type.startsWith('image/')) return true
+  return /\.(png|jpe?g|gif|bmp|webp|avif|tiff?)$/i.test(file.name)
+}
+
+function toUserErrorMessage(err: unknown) {
+  if (err instanceof Error) {
+    if (err.message === 'Failed to decode image' || err.message === 'Failed to load image') {
+      return '无法解码该图片（可能是不支持的格式或文件损坏）'
+    }
+    if (err.message.startsWith('Unexpected output type:')) return '导出失败：浏览器未返回 WebP'
+    return err.message
+  }
+  return '未知错误'
 }
 
 function toWebpName(originalName: string, suffix: string) {
@@ -37,12 +53,12 @@ export default function App() {
   }, [customQuality, profileId])
 
   const addFiles = useCallback((fileList: File[]) => {
-    const pngFiles = fileList.filter(f => f.type === 'image/png' || f.name.toLowerCase().endsWith('.png'))
-    if (pngFiles.length === 0) return
+    const imageFiles = fileList.filter(isLikelyImageFile)
+    if (imageFiles.length === 0) return
 
     setItems(prev => [
       ...prev,
-      ...pngFiles.map(file => ({
+      ...imageFiles.map(file => ({
         id: nextId(),
         name: file.name,
         originalBytes: file.size,
@@ -81,7 +97,7 @@ export default function App() {
         )
 
         try {
-          const blob = await convertPngFileToWebp(item.file, quality01)
+          const blob = await convertImageFileToWebp(item.file, quality01)
           const outputUrl = URL.createObjectURL(blob)
           if (!itemsRef.current.some(x => x.id === item.id)) {
             URL.revokeObjectURL(outputUrl)
@@ -106,7 +122,7 @@ export default function App() {
             }),
           )
         } catch (err) {
-          const message = err instanceof Error ? err.message : 'Unknown error'
+          const message = toUserErrorMessage(err)
           setItems(prev => prev.map(x => (x.id === item.id ? { ...x, status: 'error', errorMessage: message } : x)))
         }
       }
@@ -129,14 +145,14 @@ export default function App() {
   return (
     <div className="vds-page">
       <div className="vds-page__content">
-        <AppShell title="PNG → WebP" subtitle="纯前端本地转换；Profile 用于控制压缩比（预设 quality）">
+        <AppShell title="图片 → WebP" subtitle="纯前端本地转换；支持常见图片格式（以浏览器可解码为准）">
           {!supportsWebp ? (
             <Alert>
               当前浏览器不支持导出 WebP（<span className="vds-code">canvas.toBlob('image/webp')</span>）。
             </Alert>
           ) : null}
 
-          <Dropzone accept="image/png" multiple disabled={!supportsWebp || busy} onFiles={addFiles} />
+          <Dropzone accept="image/*" multiple disabled={!supportsWebp || busy} onFiles={addFiles} />
 
           {items.length > 0 ? <ResultsTable items={items} busy={busy} onRemove={removeOne} /> : null}
 
@@ -158,7 +174,7 @@ export default function App() {
         </AppShell>
       </div>
 
-      <GithubLinkBanner href="https://github.com/" label="Open Source" repo="png-to-webp" />
+      <GithubLinkBanner href="https://github.com/" label="Open Source" repo="image-to-webp" />
     </div>
   )
 }

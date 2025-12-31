@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ResultsTable, type ResultItem } from './components/ResultsTable'
 import { ProfileSelector } from './components/ProfileSelector'
+import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { WEBP_PROFILES, type ProfileId } from './lib/profiles'
 import { convertImageFileToWebp, isWebpEncodeSupported } from './lib/webp'
+import { toUserErrorMessage } from './lib/errors'
+import { useI18n } from './i18n/i18n'
 import { ActionsRow, Alert, AppShell, Button, Dropzone, GithubLinkBanner } from './vibe-design-system/components'
 
 type ItemState = ResultItem & { file: File }
@@ -16,23 +19,13 @@ function isLikelyImageFile(file: File) {
   return /\.(png|jpe?g|gif|bmp|webp|avif|tiff?)$/i.test(file.name)
 }
 
-function toUserErrorMessage(err: unknown) {
-  if (err instanceof Error) {
-    if (err.message === 'Failed to decode image' || err.message === 'Failed to load image') {
-      return '无法解码该图片（可能是不支持的格式或文件损坏）'
-    }
-    if (err.message.startsWith('Unexpected output type:')) return '导出失败：浏览器未返回 WebP'
-    return err.message
-  }
-  return '未知错误'
-}
-
 function toWebpName(originalName: string, suffix: string) {
   const base = originalName.replace(/\.[^.]+$/, '')
   return `${base}.${suffix}.webp`
 }
 
 export default function App() {
+  const { t } = useI18n()
   const [profileId, setProfileId] = useState<ProfileId>('balanced')
   const [customQuality, setCustomQuality] = useState<number>(75)
   const [items, setItems] = useState<ItemState[]>([])
@@ -122,7 +115,7 @@ export default function App() {
             }),
           )
         } catch (err) {
-          const message = toUserErrorMessage(err)
+          const message = toUserErrorMessage(err, t)
           setItems(prev => prev.map(x => (x.id === item.id ? { ...x, status: 'error', errorMessage: message } : x)))
         }
       }
@@ -145,10 +138,12 @@ export default function App() {
   return (
     <div className="vds-page">
       <div className="vds-page__content">
-        <AppShell title="图片 → WebP" subtitle="纯前端本地转换；支持常见图片格式（以浏览器可解码为准）">
+        <AppShell title={t('app.title')} subtitle={t('app.subtitle')} headerRight={<LanguageSwitcher />}>
           {!supportsWebp ? (
             <Alert>
-              当前浏览器不支持导出 WebP（<span className="vds-code">canvas.toBlob('image/webp')</span>）。
+              {t('alert.noWebp.before')}
+              <span className="vds-code">canvas.toBlob('image/webp')</span>
+              {t('alert.noWebp.after')}
             </Alert>
           ) : null}
 
@@ -165,16 +160,16 @@ export default function App() {
 
           <ActionsRow>
             <Button variant="accent" disabled={!supportsWebp || busy || items.length === 0} onClick={convertAll}>
-              {busy ? '转换中…' : '开始转换'}
+              {busy ? t('action.converting') : t('action.convert')}
             </Button>
             <Button variant="neutral" disabled={busy || items.length === 0} onClick={clearAll}>
-              清空
+              {t('action.clear')}
             </Button>
           </ActionsRow>
         </AppShell>
       </div>
 
-      <GithubLinkBanner href="https://github.com/" label="Open Source" repo="image-to-webp" />
+      <GithubLinkBanner href="https://github.com/" label={t('footer.openSource')} repo="image-to-webp" />
     </div>
   )
 }

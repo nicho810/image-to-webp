@@ -1,0 +1,57 @@
+export const SUPPORTED_LOCALES = ['en', 'ja', 'zh-TW', 'de', 'fr'] as const
+
+export type Locale = (typeof SUPPORTED_LOCALES)[number]
+
+export type I18nKey =
+  | 'action.clear'
+  | 'action.convert'
+  | 'action.converting'
+  | 'action.download'
+  | 'action.remove'
+  | 'alert.noWebp.after'
+  | 'alert.noWebp.before'
+  | 'app.subtitle'
+  | 'app.title'
+  | 'dropzone.hint'
+  | 'dropzone.pick'
+  | 'dropzone.title'
+  | 'dropzone.titleDragging'
+  | 'error.decodeImage'
+  | 'error.exportWebp'
+  | 'error.unknown'
+  | 'footer.openSource'
+  | 'header.language'
+  | 'profile.balanced.desc'
+  | 'profile.balanced.name'
+  | 'profile.high.desc'
+  | 'profile.high.name'
+  | 'profile.lossless.desc'
+  | 'profile.lossless.name'
+  | 'profile.small.desc'
+  | 'profile.small.name'
+  | 'profile.tiny.desc'
+  | 'profile.tiny.name'
+  | 'profile.withQuality'
+  | 'settings.profile.custom'
+  | 'settings.profile.help.after'
+  | 'settings.profile.help.before'
+  | 'settings.profile.label'
+  | 'settings.quality.help'
+  | 'settings.quality.label'
+  | 'settings.title'
+  | 'status.done'
+  | 'status.error'
+  | 'status.processing'
+  | 'status.ready'
+  | 'table.header.actions'
+  | 'table.header.file'
+  | 'table.header.original'
+  | 'table.header.output'
+  | 'table.header.ratio'
+  | 'table.header.status'
+  | 'table.title'
+
+export type InterpolationVars = Record<string, string | number>
+
+export type TranslationMap = Record<I18nKey, string>
+

@@ -1,5 +1,6 @@
 import { formatBytes, formatRatio } from '../lib/format'
 import { Button, Card } from '../vibe-design-system/components'
+import { useI18n } from '../i18n/i18n'
 
 export type ResultItem = {
   id: string
@@ -19,18 +20,20 @@ type ResultsTableProps = {
 }
 
 export function ResultsTable({ items, busy, onRemove }: ResultsTableProps) {
+  const { t } = useI18n()
+
   return (
-    <Card title={`文件列表（${items.length}）`}>
+    <Card title={t('table.title', { count: items.length })}>
       <div className="vds-tableWrap">
         <table className="vds-table">
           <thead>
             <tr>
-              <th>文件</th>
-              <th>原始</th>
-              <th>输出</th>
-              <th>压缩比</th>
-              <th>状态</th>
-              <th className="vds-table__actions">操作</th>
+              <th>{t('table.header.file')}</th>
+              <th>{t('table.header.original')}</th>
+              <th>{t('table.header.output')}</th>
+              <th>{t('table.header.ratio')}</th>
+              <th>{t('table.header.status')}</th>
+              <th className="vds-table__actions">{t('table.header.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -45,22 +48,22 @@ export function ResultsTable({ items, busy, onRemove }: ResultsTableProps) {
                 <td>{item.outputBytes ? formatBytes(item.outputBytes) : '-'}</td>
                 <td>{item.outputBytes ? formatRatio(item.originalBytes, item.outputBytes) : '-'}</td>
                 <td>
-                  {item.status === 'ready' && <span className="vds-badge vds-badge--neutral">待处理</span>}
-                  {item.status === 'processing' && <span className="vds-badge">处理中</span>}
-                  {item.status === 'done' && <span className="vds-badge vds-badge--ok">完成</span>}
-                  {item.status === 'error' && <span className="vds-badge vds-badge--danger">失败</span>}
+                  {item.status === 'ready' && <span className="vds-badge vds-badge--neutral">{t('status.ready')}</span>}
+                  {item.status === 'processing' && <span className="vds-badge">{t('status.processing')}</span>}
+                  {item.status === 'done' && <span className="vds-badge vds-badge--ok">{t('status.done')}</span>}
+                  {item.status === 'error' && <span className="vds-badge vds-badge--danger">{t('status.error')}</span>}
                   {item.errorMessage ? <div className="vds-errorText">{item.errorMessage}</div> : null}
                 </td>
                 <td className="vds-table__actions">
                   {item.outputUrl && item.outputName ? (
                     <a className="vds-link" href={item.outputUrl} download={item.outputName}>
-                      下载
+                      {t('action.download')}
                     </a>
                   ) : (
                     <span className="vds-mutedText">-</span>
                   )}
                   <Button variant="ghost" disabled={busy} onClick={() => onRemove(item.id)}>
-                    移除
+                    {t('action.remove')}
                   </Button>
                 </td>
               </tr>

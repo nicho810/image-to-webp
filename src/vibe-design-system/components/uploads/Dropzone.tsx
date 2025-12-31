@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { Button } from '../primitives/Button'
+import { useI18n } from '../../../i18n/i18n'
 
 type DropzoneProps = {
   accept?: string
@@ -11,6 +12,7 @@ type DropzoneProps = {
 export function Dropzone({ accept, multiple, disabled, onFiles }: DropzoneProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
+  const { t } = useI18n()
 
   const openPicker = useCallback(() => {
     if (disabled) return
@@ -47,11 +49,11 @@ export function Dropzone({ accept, multiple, disabled, onFiles }: DropzoneProps)
     >
       <div className="vds-dropzone__row">
         <div>
-          <div className="vds-dropzone__title">{dragging ? '松手即可导入' : '导入图片文件'}</div>
-          <div className="vds-dropzone__hint">拖拽到这里，或点击按钮选择文件（文件只在浏览器里使用,不会上传到任何外部的位置）</div>
+          <div className="vds-dropzone__title">{dragging ? t('dropzone.titleDragging') : t('dropzone.title')}</div>
+          <div className="vds-dropzone__hint">{t('dropzone.hint')}</div>
         </div>
         <Button variant="accent" disabled={disabled} type="button" onClick={openPicker}>
-          选择文件
+          {t('dropzone.pick')}
         </Button>
       </div>
 

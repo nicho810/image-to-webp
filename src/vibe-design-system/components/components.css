@@ -27,6 +27,20 @@
   border-bottom: var(--vds-border-width) solid var(--vds-color-border);
 }
 
+.vds-appShell__titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vds-space-12);
+  flex-wrap: wrap;
+}
+
+.vds-appShell__headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--vds-space-8);
+}
+
 .vds-appShell__title {
   font-size: 28px;
   font-weight: 900;
@@ -101,6 +115,10 @@
   border: var(--vds-border-width) solid var(--vds-color-border);
   box-shadow: var(--vds-shadow-offset) var(--vds-shadow-offset) 0 var(--vds-color-border);
   font-weight: 700;
+}
+
+.vds-select--auto {
+  width: auto;
 }
 
 .vds-rangeRow {

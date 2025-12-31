@@ -169,7 +169,7 @@ export default function App() {
         </AppShell>
       </div>
 
-      <GithubLinkBanner href="https://github.com/" label={t('footer.openSource')} repo="image-to-webp" />
+      <GithubLinkBanner href="https://github.com/nicho810/image-to-webp" label={t('footer.openSource')} repo="image-to-webp" />
     </div>
   )
 }

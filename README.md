@@ -2,9 +2,15 @@
 
 A fast, privacy-first image → WebP converter that runs entirely in your browser. No uploads to any server.
 
+## Preview
+
+![Preview](./ScreenShot.webp)
+
 ## Online Demo
 
-Not published yet. Run it locally (see below).
+Live Preview: https://image-to-webp.tools.ioatlas.com/
+
+Or run it locally (see below).
 
 ## Why This Tool?
 

@@ -8,6 +8,16 @@
   padding: 40px;
 }
 
+.vds-page {
+  min-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+.vds-page__content {
+  flex: 1;
+}
+
 .vds-appShell__header {
   display: flex;
   flex-direction: column;

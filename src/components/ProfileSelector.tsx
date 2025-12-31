@@ -10,11 +10,10 @@ type ProfileSelectorProps = {
 
 export function ProfileSelector({ profileId, customQuality, onChangeProfile, onChangeCustomQuality }: ProfileSelectorProps) {
   const selected = profileId === 'custom' ? null : WEBP_PROFILES.find(p => p.id === profileId) ?? null
-  const selectedQuality = profileId === 'custom' ? customQuality : Math.round((selected?.quality ?? 0.75) * 100)
 
   return (
     <Card title="压缩设置">
-      <div className="vds-grid vds-grid--2">
+      <div className="vds-grid">
         <div className="vds-field">
           <div className="vds-label" id="profile-label">
             Profile
@@ -49,35 +48,26 @@ export function ProfileSelector({ profileId, customQuality, onChangeProfile, onC
           {selected ? <p className="vds-help">{selected.description}</p> : null}
         </div>
 
-        <div className="vds-field">
-          <label className="vds-label" htmlFor="quality">
-            Quality
-          </label>
-          {profileId === 'custom' ? (
-            <>
-              <div className="vds-rangeRow">
-                <input
-                  id="quality"
-                  className="vds-range"
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={customQuality}
-                  onChange={e => onChangeCustomQuality(Number(e.target.value))}
-                />
-                <span className="vds-badge">Q{customQuality}</span>
-              </div>
-              <p className="vds-help">仅在「自定义」模式生效，范围 0–100。</p>
-            </>
-          ) : (
-            <>
-              <div className="vds-rangeRow">
-                <span className="vds-badge vds-badge--neutral">Q{selectedQuality}</span>
-              </div>
-              <p className="vds-help">当前为预设档位；要手动调整请切换到「自定义」。</p>
-            </>
-          )}
-        </div>
+        {profileId === 'custom' ? (
+          <div className="vds-field">
+            <label className="vds-label" htmlFor="quality">
+              Quality
+            </label>
+            <div className="vds-rangeRow">
+              <input
+                id="quality"
+                className="vds-range"
+                type="range"
+                min={0}
+                max={100}
+                value={customQuality}
+                onChange={e => onChangeCustomQuality(Number(e.target.value))}
+              />
+              <span className="vds-badge">Q{customQuality}</span>
+            </div>
+            <p className="vds-help">仅在「自定义」模式生效，范围 0–100。</p>
+          </div>
+        ) : null}
       </div>
     </Card>
   )

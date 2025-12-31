@@ -127,34 +127,38 @@ export default function App() {
   }, [])
 
   return (
-    <AppShell title="PNG → WebP" subtitle="纯前端本地转换；Profile 用于控制压缩比（预设 quality）">
-      {!supportsWebp ? (
-        <Alert>
-          当前浏览器不支持导出 WebP（<span className="vds-code">canvas.toBlob('image/webp')</span>）。
-        </Alert>
-      ) : null}
+    <div className="vds-page">
+      <div className="vds-page__content">
+        <AppShell title="PNG → WebP" subtitle="纯前端本地转换；Profile 用于控制压缩比（预设 quality）">
+          {!supportsWebp ? (
+            <Alert>
+              当前浏览器不支持导出 WebP（<span className="vds-code">canvas.toBlob('image/webp')</span>）。
+            </Alert>
+          ) : null}
 
-      <Dropzone accept="image/png" multiple disabled={!supportsWebp || busy} onFiles={addFiles} />
+          <Dropzone accept="image/png" multiple disabled={!supportsWebp || busy} onFiles={addFiles} />
 
-      <ProfileSelector
-        profileId={profileId}
-        customQuality={customQuality}
-        onChangeProfile={setProfileId}
-        onChangeCustomQuality={setCustomQuality}
-      />
+          {items.length > 0 ? <ResultsTable items={items} busy={busy} onRemove={removeOne} /> : null}
 
-      <ActionsRow>
-        <Button variant="accent" disabled={!supportsWebp || busy || items.length === 0} onClick={convertAll}>
-          {busy ? '转换中…' : '开始转换'}
-        </Button>
-        <Button variant="neutral" disabled={busy || items.length === 0} onClick={clearAll}>
-          清空
-        </Button>
-      </ActionsRow>
+          <ProfileSelector
+            profileId={profileId}
+            customQuality={customQuality}
+            onChangeProfile={setProfileId}
+            onChangeCustomQuality={setCustomQuality}
+          />
 
-      {items.length > 0 ? <ResultsTable items={items} busy={busy} onRemove={removeOne} /> : null}
+          <ActionsRow>
+            <Button variant="accent" disabled={!supportsWebp || busy || items.length === 0} onClick={convertAll}>
+              {busy ? '转换中…' : '开始转换'}
+            </Button>
+            <Button variant="neutral" disabled={busy || items.length === 0} onClick={clearAll}>
+              清空
+            </Button>
+          </ActionsRow>
+        </AppShell>
+      </div>
 
       <GithubLinkBanner href="https://github.com/" label="Open Source" repo="png-to-webp" />
-    </AppShell>
+    </div>
   )
 }

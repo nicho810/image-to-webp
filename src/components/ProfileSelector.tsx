@@ -1,5 +1,5 @@
 import { WEBP_PROFILES, type ProfileId } from '../lib/profiles'
-import { Card } from '../vibe-design-system/components'
+import { Button, Card } from '../vibe-design-system/components'
 
 type ProfileSelectorProps = {
   profileId: ProfileId
@@ -10,27 +10,39 @@ type ProfileSelectorProps = {
 
 export function ProfileSelector({ profileId, customQuality, onChangeProfile, onChangeCustomQuality }: ProfileSelectorProps) {
   const selected = profileId === 'custom' ? null : WEBP_PROFILES.find(p => p.id === profileId) ?? null
+  const selectedQuality = profileId === 'custom' ? customQuality : Math.round((selected?.quality ?? 0.75) * 100)
 
   return (
     <Card title="压缩设置">
       <div className="vds-grid vds-grid--2">
         <div className="vds-field">
-          <label className="vds-label" htmlFor="profile">
+          <div className="vds-label" id="profile-label">
             Profile
-          </label>
-          <select
-            id="profile"
-            className="vds-select"
-            value={profileId}
-            onChange={e => onChangeProfile(e.target.value as ProfileId)}
-          >
-            {WEBP_PROFILES.map(p => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-            <option value="custom">自定义</option>
-          </select>
+          </div>
+          <div className="vds-actions" role="group" aria-labelledby="profile-label">
+            {WEBP_PROFILES.map(p => {
+              const isSelected = profileId === p.id
+              return (
+                <Button
+                  key={p.id}
+                  type="button"
+                  variant={isSelected ? 'accent' : 'neutral'}
+                  aria-pressed={isSelected}
+                  onClick={() => onChangeProfile(p.id)}
+                >
+                  {p.name}（Q{Math.round(p.quality * 100)}）
+                </Button>
+              )
+            })}
+            <Button
+              type="button"
+              variant={profileId === 'custom' ? 'accent' : 'neutral'}
+              aria-pressed={profileId === 'custom'}
+              onClick={() => onChangeProfile('custom')}
+            >
+              自定义
+            </Button>
+          </div>
           <p className="vds-help">
             浏览器原生 WebP 编码仅暴露 <span className="vds-code">quality</span>；这里的 Profile 是预设的质量档位。
           </p>
@@ -41,20 +53,30 @@ export function ProfileSelector({ profileId, customQuality, onChangeProfile, onC
           <label className="vds-label" htmlFor="quality">
             Quality
           </label>
-          <div className="vds-rangeRow">
-            <input
-              id="quality"
-              className="vds-range"
-              type="range"
-              min={0}
-              max={100}
-              value={customQuality}
-              disabled={profileId !== 'custom'}
-              onChange={e => onChangeCustomQuality(Number(e.target.value))}
-            />
-            <span className="vds-badge">{customQuality}</span>
-          </div>
-          <p className="vds-help">仅在「自定义」模式生效，范围 0–100。</p>
+          {profileId === 'custom' ? (
+            <>
+              <div className="vds-rangeRow">
+                <input
+                  id="quality"
+                  className="vds-range"
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={customQuality}
+                  onChange={e => onChangeCustomQuality(Number(e.target.value))}
+                />
+                <span className="vds-badge">Q{customQuality}</span>
+              </div>
+              <p className="vds-help">仅在「自定义」模式生效，范围 0–100。</p>
+            </>
+          ) : (
+            <>
+              <div className="vds-rangeRow">
+                <span className="vds-badge vds-badge--neutral">Q{selectedQuality}</span>
+              </div>
+              <p className="vds-help">当前为预设档位；要手动调整请切换到「自定义」。</p>
+            </>
+          )}
         </div>
       </div>
     </Card>

@@ -79,3 +79,7 @@ bun run preview
 1. Decodes images via `createImageBitmap` (with an `<img>` fallback)
 2. Draws the image onto a canvas
 3. Encodes WebP using `canvas.toBlob('image/webp', quality)` and generates a downloadable file
+
+## GitHub
+
+https://github.com/nicho810/image-to-webp

@@ -15,7 +15,7 @@
 }
 
 .vds-page__content {
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .vds-appShell__header {
